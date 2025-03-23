@@ -7,6 +7,7 @@ use Flux\Flux;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Create extends Component
 {
@@ -21,7 +22,7 @@ class Create extends Component
         'mname' => 'required',
         'lname' => 'required',
         'bday' => 'required',
-        'email' => 'required|email',
+        'email' => 'required|email|unique:members,email',
         'phone' => 'required',
         'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ];
@@ -54,6 +55,10 @@ class Create extends Component
         $this->resetForm();
 
         Flux::modal('create-member')->close();
+                
+        LivewireAlert::title('Member Added Successfully!')
+        ->success()
+        ->show();
 
         $this->dispatch('reloadMembers');
     }

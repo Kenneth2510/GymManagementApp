@@ -8,6 +8,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use Illuminate\Support\Str;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Edit extends Component
 {
@@ -72,8 +73,11 @@ class Edit extends Component
 
         Flux::modal('edit-member')->close();
 
+        LivewireAlert::title('Member Updated Successfully!')
+        ->success()
+        ->show();
+
         $this->dispatch('reloadMembers');
     }
-
 
 }

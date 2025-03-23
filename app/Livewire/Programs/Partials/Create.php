@@ -5,6 +5,7 @@ namespace App\Livewire\Programs\Partials;
 use App\Models\Program;
 use Flux\Flux;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Create extends Component
 {
@@ -37,6 +38,11 @@ class Create extends Component
         $this->resetForm();
 
         Flux::modal('create-program')->close();
+
+        
+        LivewireAlert::title('Program Added Successfully!')
+        ->success()
+        ->show();
 
         $this->dispatch('reloadPrograms');
     }

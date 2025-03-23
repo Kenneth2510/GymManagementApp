@@ -6,6 +6,7 @@ use App\Models\Program;
 use Flux\Flux;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Edit extends Component
 {
@@ -50,6 +51,10 @@ class Edit extends Component
         ]);
 
         Flux::modal('edit-program')->close();
+
+        LivewireAlert::title('Program Updated Successfully!')
+        ->success()
+        ->show();
 
         $this->dispatch('reloadPrograms');
     }

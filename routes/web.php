@@ -22,7 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('subscriptions', 'subscriptions')->name('subscriptions');
+    Route::view('subscriptions', 'subscriptions.subscriptions')->name('subscriptions');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

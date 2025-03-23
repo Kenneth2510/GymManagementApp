@@ -1,21 +1,21 @@
 <div>
 
-    <flux:modal.trigger name="create-member">
-        <flux:button>Create Member</flux:button>
+    <flux:modal.trigger name="create-subscription">
+        <flux:button>Enter New Subscription</flux:button>
     </flux:modal.trigger>
 
 
-    <livewire:members.partials.create />
-    <livewire:members.partials.edit />
+    <livewire:subscriptions.partials.create />
+    <livewire:subscriptions.partials.edit />
 
 
-    <flux:modal name="delete-member" class="min-w-[22rem]">
+    <flux:modal name="delete-subscription" class="min-w-[22rem]">
         <div class="space-y-6">
             <div>
-                <flux:heading size="lg">Delete Member?</flux:heading>
+                <flux:heading size="lg">Delete subscription?</flux:heading>
 
                 <flux:subheading>
-                    <p>You're about to delete this member.</p>
+                    <p>You're about to delete this subscription.</p>
                     <p>This action cannot be reversed.</p>
                 </flux:subheading>
             </div>
@@ -27,7 +27,7 @@
                     <flux:button variant="ghost">Cancel</flux:button>
                 </flux:modal.close>
 
-                <flux:button variant="danger" wire:click="destroy()">Delete member</flux:button>
+                <flux:button variant="danger" wire:click="destroy()">Delete subscription</flux:button>
             </div>
         </div>
     </flux:modal>
@@ -52,37 +52,50 @@
                                 placeholder="Search" required="">
                         </div>
                     </div>
-                    {{-- <div class="flex space-x-3">
+                    <div class="flex space-x-3">
                         <div class="flex space-x-3 items-center">
-                            <label class="w-40 text-sm font-medium text-gray-900">member Type :</label>
-                            <select wire:model.live="admin"
+                            <label class="w-60 text-sm font-medium text-gray-900">Program Type :</label>
+                            <select wire:model.live="program"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
                                 <option value="">All</option>
-                                <option value="0">member</option>
-                                <option value="1">Admin</option>
+                                @foreach ($programs as $program)
+                                    <option value="{{ $program->id }}">{{ $program->title }}</option>
+                                @endforeach
                             </select>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
                                 @include('livewire.includes.table-sortable-th', [
-                                    'name' => 'fname',
+                                    'name' => 'id',
+                                    'displayName' => 'ID'
+                                ])
+                                @include('livewire.includes.table-sortable-th', [
+                                    'name' => 'member->fname',
                                     'displayName' => 'NAME'
                                 ])
                                 @include('livewire.includes.table-sortable-th', [
-                                    'name' => 'email',
-                                    'displayName' => 'CONTACT'
+                                    'name' => 'program->title',
+                                    'displayName' => 'PROGRAM'
                                 ])
                                 @include('livewire.includes.table-sortable-th', [
-                                    'name' => 'bday',
-                                    'displayName' => 'BIRTHDAY'
+                                    'name' => 'start_date',
+                                    'displayName' => 'START DATE'
                                 ])
                                 @include('livewire.includes.table-sortable-th', [
-                                    'name' => 'created_at',
-                                    'displayName' => 'CREATED AT'
+                                    'name' => 'end_date',
+                                    'displayName' => 'END DATE'
+                                ])
+                                @include('livewire.includes.table-sortable-th', [
+                                    'name' => 'status',
+                                    'displayName' => 'STATUS'
+                                ])
+                                @include('livewire.includes.table-sortable-th', [
+                                    'name' => 'isPaid',
+                                    'displayName' => 'PAYMENT STATUS'
                                 ])
                                 <th scope="col" class="px-4 py-3">
                                     <span class="sr-only">Actions</span>
@@ -91,24 +104,33 @@
                         </thead>
                         <tbody>
 
-                            @forelse ($members as $member)
-                                <tr wire:key="{{ $member->id }}" class="border-b dark:border-gray-700">
+                            @forelse ($subscriptions as $subscription)
+                                <tr wire:key="{{ $subscription->id }}" class="border-b dark:border-gray-700">
                                     <th scope="row"
                                         class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        {{ $member->fname }} {{ $member->mname }} {{ $member->lname }}
+                                        {{ $subscription->id }}
                                     </th>
-                                    <td class="px-4 py-3">{{ $member->email }} <br> {{ $member->phone }}</td>
-                                    <td class="px-4 py-3">{{ $member->bday }}</td>
-                                    <td class="px-4 py-3">Created on: {{ $member->created_at }} <br> Last Update on: {{ $member->updated_at }}</td>
+                                    <th scope="row"
+                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ $subscription->member->fname }} {{ $subscription->member->mname }} {{ $subscription->member->lname }}
+                                    </th>
+                                    <th scope="row"
+                                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ $subscription->program->title }}
+                                    </th>
+                                    <td class="px-4 py-3">{{ $subscription->start_date }}
+                                    <td class="px-4 py-3">{{ $subscription->end_date }}</td>
+                                    <td class="px-4 py-3">{{ $subscription->status }}</td>
+                                    <td class="px-4 py-3">{{ $subscription->transactions->isNotEmpty() && $subscription->transactions->first()->isPaid === 0 ? 'PENDING' : 'PAID' }}</td>
                                     <td class="px-4 py-3 flex items-center justify-end">
-                                        <flux:button size="sm" class="mx-1" wire:click="edit({{$member->id}})">Edit</flux:button>
-                                        <flux:button size="sm" class="mx-1" variant="danger" wire:click="delete({{$member->id}})">Delete
+                                        <flux:button size="sm" class="mx-1" wire:click="edit({{$subscription->id}})">Edit</flux:button>
+                                        <flux:button size="sm" class="mx-1" variant="danger" wire:click="delete({{$subscription->id}})">Delete
                                         </flux:button>    
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td class="px-4 py-3 text-center" colspan="4">No members found</td>
+                                    <td class="px-4 py-3 text-center" colspan="4">No subscriptions found</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -130,7 +152,7 @@
                             </select>
                         </div>
                     </div>
-                    {{ $members->links() }}
+                    {{ $subscriptions->links() }}
                 </div>
             </div>
         </div>

@@ -15,21 +15,17 @@
             </flux:field>
 
             <flux:field>
-                <flux:input type="number" min="1" wire:model="numOfDays" label="Number of Days"
+                <div class="grid grid-cols-2 gap-4">
+                    <flux:input type="number" min="1" wire:model="numOfDays" label="Number of Days"
                     placeholder="Number of Days" />
-            </flux:field>
-
-            <flux:field>
-                <flux:input.group label="Price">
-                    <flux:input.group.prefix>PHP</flux:input.group.prefix>
-                    <flux:input wire:model="price" placeholder="100.00" />
-                </flux:input.group>
+                    <flux:input icon="philippine-peso" wire:model="price" label="Price" placeholder="100.00" />
+                </div>
             </flux:field>
 
 
             <div class="flex">
                 <flux:spacer />
-                <flux:button type="submit" variant="primary" wire:click="update">Save</flux:button>
+                <flux:button variant="primary" wire:click="update">Save</flux:button>
             </div>
         </div>
     </flux:modal>

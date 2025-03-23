@@ -7,6 +7,7 @@ use Flux\Flux;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Members extends Component
 {
@@ -41,13 +42,6 @@ class Members extends Component
         ]);
     }
 
-    // #[On('reloadMembers')]
-    // public function reloadMembers()
-    // {
-    //     $this->members = Member::all();
-    // }
-
-
     public function edit($id)
     {
         $this->dispatch("editMember", $id);
@@ -63,6 +57,11 @@ class Members extends Component
     {
         $this->selectedMember->delete();
         Flux::modal('delete-member')->close();
+        
+        LivewireAlert::title('Member Deleted Successfully!')
+        ->success()
+        ->show();
+        
         $this->dispatch('reloadMembers');
     }
 

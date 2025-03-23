@@ -7,6 +7,7 @@ use Flux\Flux;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Programs extends Component
 {
@@ -60,6 +61,11 @@ class Programs extends Component
     {
         $this->selectedProgram->delete();
         Flux::modal('delete-program')->close();
-        $this->dispatch('reloadProgram');
+
+        LivewireAlert::title('Program Deleted Successfully!')
+        ->success()
+        ->show();
+        
+        $this->dispatch('reloadPrograms');
     }
 }

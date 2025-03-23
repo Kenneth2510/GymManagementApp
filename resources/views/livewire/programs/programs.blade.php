@@ -27,7 +27,7 @@
                     <flux:button variant="ghost">Cancel</flux:button>
                 </flux:modal.close>
 
-                <flux:button type="submit" variant="danger" wire:click="destroy()">Delete program</flux:button>
+                <flux:button variant="danger" wire:click="destroy()">Delete program</flux:button>
             </div>
         </div>
     </flux:modal>
