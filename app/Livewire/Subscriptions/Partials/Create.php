@@ -56,9 +56,28 @@ class Create extends Component
     public function updatedSelectedProgram()
     {
         $program = Program::find($this->selectedProgram);
-        $this->programDescription = $program->description;
-        $this->numOfDays = $program->numOfDays;
-        $this->programPrice = $program->price;
+        
+        if ($program) {
+            $this->programDescription = $program->description;
+            $this->numOfDays = $program->numOfDays;
+            $this->programPrice = $program->price;
+        }
+
+        if ($this->start_date) {
+            $this->setStartDate();
+        }
+    }
+
+    public function updatedStartDate()
+    {
+        $this->setStartDate();
+    }
+
+    public function setStartDate()
+    {
+        if ($this->selectedProgram && $this->start_date && $this->numOfDays) {
+            $this->end_date = Carbon::parse($this->start_date)->addDays($this->numOfDays)->toDateString();
+        }
     }
 
     public function submit()
@@ -69,6 +88,22 @@ class Create extends Component
     
         if($this->numOfDays != $date_difference) {
             $this->addError('end_date', 'End date must be ' . $this->numOfDays . ' days from start date');
+            return;
+        }
+
+        $overlappingSubscription = Subscription::where('member_id', $this->selectedMember->id)
+        ->where(function ($query) {
+            $query->whereBetween('start_date', [$this->start_date, $this->end_date])
+                  ->orWhereBetween('end_date', [$this->start_date, $this->end_date])
+                  ->orWhere(function ($q) {
+                      $q->where('start_date', '<=', $this->start_date)
+                        ->where('end_date', '>=', $this->end_date);
+                  });
+        })
+        ->exists();
+
+        if($overlappingSubscription) {
+            $this->addError('start_date', 'This member already has an active subscription within the selected date range.');
             return;
         }
 

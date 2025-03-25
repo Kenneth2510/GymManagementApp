@@ -5,6 +5,7 @@ namespace App\Livewire\Subscriptions\Partials;
 use App\Models\Member;
 use App\Models\Program;
 use App\Models\Subscription;
+use Carbon\Carbon;
 use Flux\Flux;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\On;
@@ -31,10 +32,10 @@ class Edit extends Component
         'start_date' => 'required|date|after_or_equal:today',
         'end_date' => 'required|date|after:start_date',
     ];
-      
+
     public function updatedMemberSearch()
     {
-        if(strlen($this->memberSearch) > 1) {
+        if (strlen($this->memberSearch) > 1) {
             $this->memberList = Member::where('fname', 'like', '%' . $this->memberSearch . '%')
                 ->orWhere('lname', 'like', '%' . $this->memberSearch . '%')
                 ->orWhere('mname', 'like', '%' . $this->memberSearch . '%')
@@ -56,16 +57,35 @@ class Edit extends Component
     public function updatedSelectedProgram()
     {
         $program = Program::find($this->selectedProgram);
-        $this->programDescription = $program->description;
-        $this->numOfDays = $program->numOfDays;
-        $this->programPrice = $program->price;
+
+        if ($program) {
+            $this->programDescription = $program->description;
+            $this->numOfDays = $program->numOfDays;
+            $this->programPrice = $program->price;
+        }
+
+        if ($this->start_date) {
+            $this->setStartDate();
+        }
+    }
+
+    public function updatedStartDate()
+    {
+        $this->setStartDate();
+    }
+
+    public function setStartDate()
+    {
+        if ($this->selectedProgram && $this->start_date && $this->numOfDays) {
+            $this->end_date = Carbon::parse($this->start_date)->addDays($this->numOfDays)->toDateString();
+        }
     }
 
     #[On('editSubscription')]
     public function editSubscription($id)
     {
         $subscription = Subscription::find($id);
-        
+
         $this->subscriptionId = $subscription->id;
         $this->selectedMember = $subscription->member;
         $this->memberSearch = $subscription->member->fname . ' ' . $subscription->member->mname . ' ' . $subscription->member->lname;
@@ -84,6 +104,22 @@ class Edit extends Component
         $this->validate();
 
         $subsciption = Subscription::find($this->subscriptionId);
+
+        $overlappingSubscription = Subscription::where('member_id', $this->selectedMember->id)
+            ->where(function ($query) {
+                $query->whereBetween('start_date', [$this->start_date, $this->end_date])
+                    ->orWhereBetween('end_date', [$this->start_date, $this->end_date])
+                    ->orWhere(function ($q) {
+                        $q->where('start_date', '<=', $this->start_date)
+                            ->where('end_date', '>=', $this->end_date);
+                    });
+            })->exists();
+
+        if ($overlappingSubscription) {
+            $this->addError('start_date', 'This member already has an active subscription within the selected date range.');
+            return;
+        }
+
         $subsciption->update([
             'member_id' => $this->selectedMember->id,
             'program_id' => $this->selectedProgram,
@@ -95,8 +131,8 @@ class Edit extends Component
         Flux::modal('edit-subscription')->close();
 
         LivewireAlert::title('Subscription Updated Successfully!')
-        ->success()
-        ->show();
+            ->success()
+            ->show();
 
         $this->dispatch('reloadSubscriptions');
     }

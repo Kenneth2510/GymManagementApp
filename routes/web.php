@@ -26,6 +26,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::view('transactions', 'transactions.transactions')->name('transactions');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('attendance', 'attendance')->name('attendance');
 });
 

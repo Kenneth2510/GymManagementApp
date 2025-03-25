@@ -82,4 +82,11 @@ class Subscriptions extends Component
         
         $this->dispatch('reloadSubscriptions');
     }
+
+
+    public function transact($transaction_id)
+    {
+        $this->dispatch('createTransaction', $transaction_id);
+    }
+
 }

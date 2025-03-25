@@ -7,6 +7,7 @@
 
     <livewire:subscriptions.partials.create />
     <livewire:subscriptions.partials.edit />
+    <livewire:transactions.partials.create />
 
 
     <flux:modal name="delete-subscription" class="min-w-[22rem]">
@@ -91,7 +92,7 @@
                                 ])
                                 @include('livewire.includes.table-sortable-th', [
                                     'name' => 'status',
-                                    'displayName' => 'STATUS'
+                                    'displayName' => 'PROGRAM STATUS'
                                 ])
                                 @include('livewire.includes.table-sortable-th', [
                                     'name' => 'isPaid',
@@ -121,7 +122,13 @@
                                     <td class="px-4 py-3">{{ $subscription->start_date }}
                                     <td class="px-4 py-3">{{ $subscription->end_date }}</td>
                                     <td class="px-4 py-3">{{ $subscription->status }}</td>
-                                    <td class="px-4 py-3">{{ $subscription->transactions->isNotEmpty() && $subscription->transactions->first()->isPaid === 0 ? 'PENDING' : 'PAID' }}</td>
+                                    <td class="px-4 py-3">
+                                        @if($subscription->transactions->isNotEmpty() && $subscription->transactions->first()->isPaid === 0)
+                                            <flux:button class="!bg-amber-400 hover:!bg-amber-600" wire:click="transact({{ $subscription->transactions->first()->id }})">PENDING</flux:button>
+                                        @else
+                                        <flux:button class="!bg-green-400 hover:!bg-green-600" wire:click="transact({{ $subscription->transactions->first()->id }})">PAID</flux:button>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-3 flex items-center justify-end">
                                         <flux:button size="sm" class="mx-1" wire:click="edit({{$subscription->id}})">Edit</flux:button>
                                         <flux:button size="sm" class="mx-1" variant="danger" wire:click="delete({{$subscription->id}})">Delete

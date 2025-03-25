@@ -50,7 +50,7 @@
 
             <flux:field>
                 <div class="grid grid-cols-2 gap-4">
-                    <flux:input type="date" wire:model="start_date" min="{{ now()->toDateString() }}" max="2999-12-31" label="Start Date" />
+                    <flux:input type="date" wire:model.lazy="start_date" min="{{ now()->toDateString() }}" max="2999-12-31" label="Start Date" />
                     <flux:input type="date" wire:model="end_date" min="{{ now()->toDateString() }}" max="2999-12-31" label="End Date" />
                 </div>
             </flux:field>
