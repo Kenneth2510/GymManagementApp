@@ -68,7 +68,7 @@
 
                     
                     @if ($subscription->transactions->first()->isPaid === 0)
-                        <flux:button variant="primary" wire:click="markPaid">Mark as Paid</flux:button>
+                        <flux:button variant="primary" wire:click="markPaid()">Mark as Paid</flux:button>
                     @else
                         <flux:button variant="danger" wire:click="markUnpaid">Return to Unpaid</flux:button>
                     @endif

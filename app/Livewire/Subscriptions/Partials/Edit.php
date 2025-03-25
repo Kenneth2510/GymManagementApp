@@ -105,20 +105,20 @@ class Edit extends Component
 
         $subsciption = Subscription::find($this->subscriptionId);
 
-        $overlappingSubscription = Subscription::where('member_id', $this->selectedMember->id)
-            ->where(function ($query) {
-                $query->whereBetween('start_date', [$this->start_date, $this->end_date])
-                    ->orWhereBetween('end_date', [$this->start_date, $this->end_date])
-                    ->orWhere(function ($q) {
-                        $q->where('start_date', '<=', $this->start_date)
-                            ->where('end_date', '>=', $this->end_date);
-                    });
-            })->exists();
+        // $overlappingSubscription = Subscription::where('member_id', $this->selectedMember->id)
+        //     ->where(function ($query) {
+        //         $query->whereBetween('start_date', [$this->start_date, $this->end_date])
+        //             ->orWhereBetween('end_date', [$this->start_date, $this->end_date])
+        //             ->orWhere(function ($q) {
+        //                 $q->where('start_date', '<=', $this->start_date)
+        //                     ->where('end_date', '>=', $this->end_date);
+        //             });
+        //     })->exists();
 
-        if ($overlappingSubscription) {
-            $this->addError('start_date', 'This member already has an active subscription within the selected date range.');
-            return;
-        }
+        // if ($overlappingSubscription) {
+        //     $this->addError('start_date', 'This member already has an active subscription within the selected date range.');
+        //     return;
+        // }
 
         $subsciption->update([
             'member_id' => $this->selectedMember->id,

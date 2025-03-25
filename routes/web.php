@@ -30,7 +30,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('attendance', 'attendance')->name('attendance');
+    Route::view('attendance', 'attendances.attendances')->name('attendance');
 });
 
 Route::middleware(['auth'])->group(function () {
