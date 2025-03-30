@@ -121,7 +121,15 @@
                                     </th>
                                     <td class="px-4 py-3">{{ $subscription->start_date }}
                                     <td class="px-4 py-3">{{ $subscription->end_date }}</td>
-                                    <td class="px-4 py-3">{{ $subscription->status }}</td>
+                                    <td class="px-4 py-3">
+                                        @if ($subscription->status === 'pending')
+                                            <flux:badge color="yellow">Pending</flux:badge>
+                                        @elseif ($subscription->status === 'active')
+                                            <flux:badge color="emerald">Active</flux:badge>
+                                        @else
+                                            <flux:badge color="zinc">Expired</flux:badge>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-3">
                                         @if($subscription->transactions->isNotEmpty() && $subscription->transactions->first()->isPaid === 0)
                                             <flux:button class="!bg-amber-400 hover:!bg-amber-600" wire:click="transact({{ $subscription->transactions->first()->id }})">PENDING</flux:button>

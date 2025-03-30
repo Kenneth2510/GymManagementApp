@@ -5,6 +5,7 @@ namespace App\Livewire\Subscriptions\Partials;
 use App\Models\Member;
 use App\Models\Program;
 use App\Models\Subscription;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use Flux\Flux;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -29,7 +30,8 @@ class Edit extends Component
         'memberSearch'  => 'required',
         'selectedMember' => 'required',
         'selectedProgram' => 'required',
-        'start_date' => 'required|date|after_or_equal:today',
+        // 'start_date' => 'required|date|after_or_equal:today',
+        'start_date' => 'required|date',
         'end_date' => 'required|date|after:start_date',
     ];
 
@@ -94,6 +96,10 @@ class Edit extends Component
         $this->start_date = $subscription->start_date;
         $this->end_date = $subscription->end_date;
         $this->status = $subscription->status;
+        $this->programDescription = $subscription->program->description;
+        $this->numOfDays = $subscription->program->numOfDays;
+        $this->programPrice = $subscription->program->price;
+
 
         Flux::modal('edit-subscription')->show();
     }
@@ -105,20 +111,12 @@ class Edit extends Component
 
         $subsciption = Subscription::find($this->subscriptionId);
 
-        // $overlappingSubscription = Subscription::where('member_id', $this->selectedMember->id)
-        //     ->where(function ($query) {
-        //         $query->whereBetween('start_date', [$this->start_date, $this->end_date])
-        //             ->orWhereBetween('end_date', [$this->start_date, $this->end_date])
-        //             ->orWhere(function ($q) {
-        //                 $q->where('start_date', '<=', $this->start_date)
-        //                     ->where('end_date', '>=', $this->end_date);
-        //             });
-        //     })->exists();
+        $transaction = Transaction::where('subscription_id', $this->subscriptionId)->first();
 
-        // if ($overlappingSubscription) {
-        //     $this->addError('start_date', 'This member already has an active subscription within the selected date range.');
-        //     return;
-        // }
+        if($transaction->isPaid === 1) {
+                $this->addError('selectedProgram', 'This Subscription is already paid. Create another subscription');
+                return;
+        }
 
         $subsciption->update([
             'member_id' => $this->selectedMember->id,
@@ -127,6 +125,11 @@ class Edit extends Component
             'end_date' => $this->end_date,
             'status' => $this->status
         ]);
+
+
+
+        $transaction->amount = $this->programPrice;
+        $transaction->save();
 
         Flux::modal('edit-subscription')->close();
 

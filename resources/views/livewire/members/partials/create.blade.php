@@ -15,7 +15,7 @@
             <flux:field>
                 <div class="grid grid-cols-2 gap-4">
                     <flux:input wire:model="email" label="Email" placeholder="Email" />
-                    <flux:input wire:model="phone" label="Phone" placeholder="Phone" />
+                    <flux:input wire:model="phone" maxlength="12" label="Phone" placeholder="Phone" />
                 </div>
             </flux:field>
 

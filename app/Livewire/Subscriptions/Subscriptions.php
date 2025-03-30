@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Subscriptions;
 
+use App\Models\Attendance;
 use App\Models\Member;
 use App\Models\Program;
 use App\Models\Subscription;
+use Carbon\Carbon;
 use Flux\Flux;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\On;
@@ -34,9 +36,34 @@ class Subscriptions extends Component
     }
 
 
+    public function updateProgramStatus()
+    {
+        Subscription::with(['transactions'])
+        ->whereHas('transactions', function($query) {
+            $query->where('isPaid', 1);
+        })
+        ->where('start_date', '<=' , Carbon::today())
+        ->where('end_date', '>=', Carbon::today())
+        ->update([
+            'status' => 'active'
+        ]);
+    }
+
+    public function updateProgramStatusInactive()
+    {
+        Subscription::where('end_date', '<', Carbon::today())
+        ->update([
+            'status' => 'expired'
+        ]);
+    }
+
+
     #[On('reloadSubscriptions')]
     public function render()
     {
+        $this->updateProgramStatus();
+        $this->updateProgramStatusInactive();
+        
         return view('livewire.subscriptions.subscriptions', [
             'programs' => Program::all(),
             'subscriptions' => Subscription::query()
@@ -53,7 +80,7 @@ class Subscriptions extends Component
                 return $query->orderBy($this->sortBy, $this->sortDir);
             })
             ->with(['member', 'program', 'transactions'])
-            ->paginate(10)
+            ->paginate(10),
         ]);
     }
 

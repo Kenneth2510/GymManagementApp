@@ -40,11 +40,11 @@ class Edit extends Component
 
     protected $rules = [
         'fname' => 'required',
-        'mname' => 'required',
+        'mname' => 'nullable',
         'lname' => 'required',
         'bday' => 'required',
         'email' => 'required|email',
-        'phone' => 'required',
+        'phone' => 'required|string|max:12',
         'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ];
 

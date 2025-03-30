@@ -18,6 +18,11 @@ class Attendances extends Component
     public $sortBy = 'created_at';
     public $sortDir = 'DESC';
 
+
+    public $logPerPage = 5;
+    public $logSearch = '';
+
+
     public function setSortBy($sortByField)
     {
         if($this->sortBy === $sortByField)
@@ -41,10 +46,20 @@ class Attendances extends Component
         ->search($this->search)
         ->orderBy($this->sortBy, $this->sortDir)
         ->paginate($this->perPage);
+
+        $attendanceLogs = Attendance::with([
+            'subscription.member',
+            'subscription.program',
+            'subscription.transactions',
+        ])
+        ->search($this->logSearch)
+        ->orderBy('created_at', 'DESC')
+        ->paginate($this->logPerPage);
         
 
         return view('livewire.attendances.attendances', [
             'attendees' => $attendees,
+            'attendanceLogs' => $attendanceLogs,
         ]);
     }
 
