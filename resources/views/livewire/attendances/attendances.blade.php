@@ -61,7 +61,7 @@
                                                 Time In
                                             </flux:button>
                                         @elseif ($attendee->attendance && is_null($attendee->attendance->timeOut))
-                                            <flux:button class="!bg-red-400 hover:!bg-red-600" wire:click="timeOut({{ $attendee->id }})" class="bg-red-500 text-white px-4 py-2 rounded">
+                                            <flux:button class="!bg-red-400 hover:!bg-red-600" wire:click="timeOut({{ $attendee->attendance->id }})" class="bg-red-500 text-white px-4 py-2 rounded">
                                                 Time Out
                                             </flux:button>
                                         @else
@@ -132,6 +132,7 @@
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                             <tr>
                                 <th scope="col" class="px-4 py-3">Name</th>
+                                <th scope="col" class="px-4 py-3">Date</th>
                                 <th scope="col" class="px-4 py-3">Subscription</th>
                                 <th scope="col" class="px-4 py-3">Period</th>
                                 <th scope="col" class="px-4 py-3">Time In</th>
@@ -140,14 +141,17 @@
                         </thead>
                         <tbody>
                             @forelse ($attendanceLogs as $log)
-                            <th scope="row"
-                                class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $log->subscription->member->fname }} {{ $log->subscription->member->mname }} {{ $log->subscription->member->lname }}
-                            </th>
-                            <td class="px-4 py-3">{{ $log->subscription->program->title }}</td>
-                            <td class="px-4 py-3">Start Date: {{ $log->subscription->start_date }} <br> End Date: {{ $log->subscription->end_date }}</td>
-                            <td class="px-4 py-3">{{ $log->timeIn }}</td>
-                            <td class="px-4 py-3">{{ $log->timeOut ?? '-' }}</td>
+                            <tr>
+                                <th scope="row"
+                                    class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    {{ $log->subscription->member->fname }} {{ $log->subscription->member->mname }} {{ $log->subscription->member->lname }}
+                                </th>
+                                <td class="px-4 py-3">{{ $log->date }}</td>
+                                <td class="px-4 py-3">{{ $log->subscription->program->title }}</td>
+                                <td class="px-4 py-3">Start Date: {{ $log->subscription->start_date }} <br> End Date: {{ $log->subscription->end_date }}</td>
+                                <td class="px-4 py-3">{{ $log->timeIn }}</td>
+                                <td class="px-4 py-3">{{ $log->timeOut ?? '-' }}</td>
+                            <tr>
                             @empty
                                 <tr>
                                     <td class="px-4 py-3 text-center" colspan="4">No logs found</td>
@@ -158,7 +162,7 @@
                 </div>
 
                 <div class="py-4 px-3">
-                    <div class="flex ">
+                    {{-- <div class="flex ">
                         <div class="flex space-x-4 items-center mb-3">
                             <label class="w-32 text-sm font-medium text-gray-900">Per Page</label>
                             <select wire:model.live='logPerPage'
@@ -171,7 +175,7 @@
                                 <option value="100">100</option>
                             </select>
                         </div>
-                    </div>
+                    </div> --}}
                     {{ $attendanceLogs->links() }}
                 </div>
             </div>

@@ -19,7 +19,7 @@ class Attendances extends Component
     public $sortDir = 'DESC';
 
 
-    public $logPerPage = 5;
+    // public $logPerPage = 5;
     public $logSearch = '';
 
 
@@ -37,6 +37,8 @@ class Attendances extends Component
 
     public function render()
     {
+
+
         $attendees = Subscription::with(['member', 'program', 'transactions', 'attendance'])
         ->whereHas('transactions', function ($query) {
             $query->where('isPaid', 1);
@@ -54,7 +56,7 @@ class Attendances extends Component
         ])
         ->search($this->logSearch)
         ->orderBy('created_at', 'DESC')
-        ->paginate($this->logPerPage);
+        ->paginate(10);
         
 
         return view('livewire.attendances.attendances', [
