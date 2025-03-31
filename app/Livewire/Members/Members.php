@@ -42,6 +42,11 @@ class Members extends Component
         ]);
     }
 
+    public function view_progress($id)
+    {
+        $this->dispatch('progress', $id);
+    }
+
     public function edit($id)
     {
         $this->dispatch("editMember", $id);

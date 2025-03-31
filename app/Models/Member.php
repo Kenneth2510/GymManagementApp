@@ -30,6 +30,11 @@ class Member extends Model
         return $this->hasMany(Subscription::class);
     }
 
+    public function progress()
+    {
+        return $this->hasMany(Progress::class);
+    }
+
 
     public function scopeSearch($query, $value)
     {

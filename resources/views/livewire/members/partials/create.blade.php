@@ -26,6 +26,16 @@
                 </div>
             </flux:field>
 
+            <flux:separator />
+            <flux:heading size="lg">Body Progress</flux:heading>
+            <flux:subheading>Add progress details for the member.</flux:subheading>
+            <flux:field>
+                <div class="grid grid-cols-2 gap-4">
+                    <flux:input type="number" wire:model="height" min="0.5" max="3" step="0.01" label="Height in Meters (m)" />
+                    <flux:input type="number" wire:model="weight" min="10" max="500" step="0.1" label="Weight in Kilograms (kg)"/>
+                </div>
+            </flux:field>
+
             <div class="flex">
                 <flux:spacer />
                 <flux:button variant="primary" wire:click="submit">Save</flux:button>

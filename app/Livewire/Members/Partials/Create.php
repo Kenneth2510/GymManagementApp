@@ -3,6 +3,8 @@
 namespace App\Livewire\Members\Partials;
 
 use App\Models\Member;
+use App\Models\Progress;
+use Carbon\Carbon;
 use Flux\Flux;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -15,6 +17,7 @@ class Create extends Component
 
     public $fname, $mname, $lname, $bday;
     public $email, $phone;
+    public $height, $weight;
     public $photo;
 
     protected $rules = [
@@ -25,7 +28,22 @@ class Create extends Component
         'email' => 'required|email|unique:members,email',
         'phone' => 'required|string|max:12',
         'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'height' => 'required|numeric|min:0.5|max:3',
+        'weight' => 'required|numeric|min:10|max:500',
     ];
+
+    public function checkBmiRemarks($bmi)
+    {
+        if ($bmi < 18.5) {
+            return 'Underweight';
+        } elseif ($bmi < 25) {
+            return 'Normal';
+        } elseif ($bmi < 30) {
+            return 'Overweight';
+        } else {
+            return 'Obese';
+        }
+    }
 
     public function render()
     {
@@ -41,7 +59,7 @@ class Create extends Component
             ? $this->photo->store("members/{$folderName}", 'public')
             : null;
 
-        Member::create([
+        $member = Member::create([
             'fname' => $this->fname,
             'mname' => $this->mname,
             'lname' => $this->lname,
@@ -50,6 +68,18 @@ class Create extends Component
             'phone' => $this->phone,
             'photo' => $photoPath,
 
+        ]);
+
+        $bmi = $this->weight / ($this->height ** 2);
+        $bmi_remarks = $this->checkBmiRemarks($bmi);
+
+        Progress::create([
+            'member_id' => $member->id,
+            'date_record' => Carbon::today(),
+            'height' => $this->height,
+            'weight' => $this->weight,
+            'bmi' => $bmi,
+            'bmi_remarks' => $bmi_remarks,
         ]);
 
         $this->resetForm();
@@ -72,5 +102,7 @@ class Create extends Component
         $this->email = '';
         $this->phone = '';
         $this->photo = '';
+        $this->height = '';
+        $this->weight = '';
     }
 }

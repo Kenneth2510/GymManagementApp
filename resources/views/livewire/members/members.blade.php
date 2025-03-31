@@ -1,12 +1,13 @@
 <div>
 
     <flux:modal.trigger name="create-member">
-        <flux:button>Create Member</flux:button>
+        <flux:button icon="pencil-square">Create Member</flux:button>
     </flux:modal.trigger>
 
 
     <livewire:members.partials.create />
     <livewire:members.partials.edit />
+    <livewire:progress.progress />
 
 
     <flux:modal name="delete-member" class="min-w-[22rem]">
@@ -52,17 +53,7 @@
                                 placeholder="Search" required="">
                         </div>
                     </div>
-                    {{-- <div class="flex space-x-3">
-                        <div class="flex space-x-3 items-center">
-                            <label class="w-40 text-sm font-medium text-gray-900">member Type :</label>
-                            <select wire:model.live="admin"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ">
-                                <option value="">All</option>
-                                <option value="0">member</option>
-                                <option value="1">Admin</option>
-                            </select>
-                        </div>
-                    </div> --}}
+
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -101,8 +92,9 @@
                                     <td class="px-4 py-3">{{ $member->bday }}</td>
                                     <td class="px-4 py-3">Created on: {{ $member->created_at }} <br> Last Update on: {{ $member->updated_at }}</td>
                                     <td class="px-4 py-3 flex items-center justify-end">
-                                        <flux:button size="sm" class="mx-1" wire:click="edit({{$member->id}})">Edit</flux:button>
-                                        <flux:button size="sm" class="mx-1" variant="danger" wire:click="delete({{$member->id}})">Delete
+                                        <flux:button icon="chart-bar" size="sm" class="mx-1" wire:click="view_progress({{ $member->id }})">View Progress</flux:button>
+                                        <flux:button icon="pencil" size="sm" class="mx-1" wire:click="edit({{$member->id}})">Edit</flux:button>
+                                        <flux:button icon="trash" size="sm" class="mx-1" variant="danger" wire:click="delete({{$member->id}})">Delete
                                         </flux:button>    
                                     </td>
                                 </tr>

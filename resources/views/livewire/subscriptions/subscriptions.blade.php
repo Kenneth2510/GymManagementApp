@@ -1,7 +1,7 @@
 <div>
 
     <flux:modal.trigger name="create-subscription">
-        <flux:button>Enter New Subscription</flux:button>
+        <flux:button icon="pencil-square">Enter New Subscription</flux:button>
     </flux:modal.trigger>
 
 
@@ -132,14 +132,14 @@
                                     </td>
                                     <td class="px-4 py-3">
                                         @if($subscription->transactions->isNotEmpty() && $subscription->transactions->first()->isPaid === 0)
-                                            <flux:button class="!bg-amber-400 hover:!bg-amber-600" wire:click="transact({{ $subscription->transactions->first()->id }})">PENDING</flux:button>
+                                            <flux:button icon="x-circle" class="!bg-amber-400 hover:!bg-amber-600" wire:click="transact({{ $subscription->transactions->first()->id }})">PENDING</flux:button>
                                         @else
-                                        <flux:button class="!bg-green-400 hover:!bg-green-600" wire:click="transact({{ $subscription->transactions->first()->id }})">PAID</flux:button>
+                                            <flux:button icon="check-circle" class="!bg-green-400 hover:!bg-green-600" wire:click="transact({{ $subscription->transactions->first()->id }})">PAID</flux:button>
                                         @endif
                                     </td>
                                     <td class="px-4 py-3 flex items-center justify-end">
-                                        <flux:button size="sm" class="mx-1" wire:click="edit({{$subscription->id}})">Edit</flux:button>
-                                        <flux:button size="sm" class="mx-1" variant="danger" wire:click="delete({{$subscription->id}})">Delete
+                                        <flux:button icon="pencil" size="sm" class="mx-1" wire:click="edit({{$subscription->id}})">Edit</flux:button>
+                                        <flux:button icon="trash" size="sm" class="mx-1" variant="danger" wire:click="delete({{$subscription->id}})">Delete
                                         </flux:button>    
                                     </td>
                                 </tr>
