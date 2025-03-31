@@ -33,7 +33,7 @@
         </div>
     </flux:modal>
 
-    <section class="mt-10">
+    <section class="mt-1">
         <div class="mx-auto max-w-screen-3xl px-4 lg:px-12">
             <!-- Start coding here -->
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -93,7 +93,7 @@
                                     <td class="px-4 py-3">Created on: {{ $member->created_at }} <br> Last Update on: {{ $member->updated_at }}</td>
                                     <td class="px-4 py-3 flex items-center justify-end">
                                         <flux:button icon="chart-bar" size="sm" class="mx-1" wire:click="view_progress({{ $member->id }})">View Progress</flux:button>
-                                        <flux:button icon="pencil" size="sm" class="mx-1" wire:click="edit({{$member->id}})">Edit</flux:button>
+                                        <flux:button icon="pencil" size="sm" class="mx-1 bg-amber-300" wire:click="edit({{$member->id}})">Edit</flux:button>
                                         <flux:button icon="trash" size="sm" class="mx-1" variant="danger" wire:click="delete({{$member->id}})">Delete
                                         </flux:button>    
                                     </td>

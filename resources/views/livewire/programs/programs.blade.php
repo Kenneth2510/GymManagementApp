@@ -106,7 +106,7 @@
                                     <td class="px-4 py-3">{{ $program->price }}</td>
                                     <td class="px-4 py-3">Created on: {{ $program->created_at }} <br> Last Update on: {{ $program->updated_at }}</td>
                                     <td class="px-4 py-3 flex items-center justify-end">
-                                        <flux:button icon="pencil" size="sm" class="mx-1" wire:click="edit({{$program->id}})">Edit</flux:button>
+                                        <flux:button icon="pencil" size="sm" class="mx-1 bg-amber-300" wire:click="edit({{$program->id}})">Edit</flux:button>
                                         <flux:button icon="trash" size="sm" class="mx-1" variant="danger" wire:click="delete({{$program->id}})">Delete
                                         </flux:button>    
                                     </td>

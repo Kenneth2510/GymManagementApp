@@ -2,7 +2,7 @@
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div class="grid auto-rows-min gap-4 md:grid-cols-3">
             <div
-                class="p-5 flex flex-col justify-center relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                class="p-5 flex flex-col text-white justify-center relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500">
                 <p class="text-lg lg:text-3xl text-center">Total Members</p>
                 <div class="text-center">
                     <div class="text-6xl lg:text-9xl font-bold p-1 flex justify-center items-center">
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <div
-                class="p-5 flex flex-col justify-center relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                class="p-5 flex flex-col text-white justify-center relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-gradient-to-r from-orange-500 via-yellow-500 to-yellow-600">
                 <p class="text-lg lg:text-3xl text-center">Total Programs</p>
                 <div class="text-center">
                     <div class="text-6xl lg:text-9xl font-bold p-1 flex justify-center items-center">
@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div
-                class="p-5 flex flex-col justify-center relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+                class="p-5 flex flex-col text-white justify-center relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-gradient-to-r from-pink-500 to-purple-500">
                 <p class="text-lg lg:text-3xl text-center">Total Subscriptions</p>
                 <div class="text-center">
                     <div class="text-6xl lg:text-9xl font-bold p-1 flex justify-center items-center">
@@ -59,24 +59,60 @@
                 </div>
             </div>
         </div>
-
-        <flux:separator class="m-5" />
         
         <div
-        class="relative p-3 h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
+            class="relative p-5 h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700 bg-gradient-to-r from-indigo-500 to-purple-600">
+            
+            <!-- Title -->
+            <h2 class="text-3xl font-extrabold text-center text-white mb-6">New Members for the Year</h2>
         
-            <h2 class="text-3xl mt-5 font-extrabold">New Members for the year</h2>
-            <div>
-                <canvas id="loadMemberChartData"></canvas>
+            <!-- Chart Container -->
+            <div class="relative w-full h-80 rounded-lg overflow-hidden bg-white shadow-lg">
+                <canvas id="loadMemberChartData" class="w-full h-full"></canvas>
+            </div>
+        
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const chartData = @json($memberChartData);
+                    const ctx = document.getElementById("loadMemberChartData").getContext("2d");
+        
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 5,
+                                    }
+                                }
+                            }
+                        }
+                    })
+                });
+            </script>
+        </div>
 
+        <div class="relative h-full grid auto-rows-min gap-4 md:grid-cols-2 overflow-hidden">
+            <div class="mt-5 md:mt-1 p-5 bg-gradient-to-r from-blue-500 to-purple-600 border rounded-xl">
+                <!-- Title -->
+                <h2 class="text-3xl font-extrabold text-white mb-6">Subscription Status</h2>
+            
+                <!-- Chart Container -->
+                <div class="relative w-full h-80 rounded-lg overflow-hidden bg-white shadow-lg">
+                    <canvas id="loadSubscriberChartData" class="w-full h-full"></canvas>
+                </div>
+            
                 <script>
                     document.addEventListener("DOMContentLoaded", function () {
-                        const chartData = @json($memberChartData);
-                        const ctx = document.getElementById("loadMemberChartData").getContext("2d");
-
-
+                        const chartData = @json($subscriptionChartData);
+                        const ctx = document.getElementById("loadSubscriberChartData").getContext("2d");
+            
                         new Chart(ctx, {
-                            type: 'line',
+                            type: 'bar',
                             data: chartData,
                             options: {
                                 responsive: true,
@@ -91,68 +127,38 @@
                     });
                 </script>
             </div>
-        </div>
 
-        <flux:separator class="m-5" />
-
-        <div class="relative h-full grid auto-rows-min gap-4 md:grid-cols-2 overflow-hidden">
-            <div class="mt-5 md:mt-1 p-3 border rounded-xl">
-                <h2 class="text-3xl font-extrabold">Subscription Status</h2>
-                <div class="">
-                    <canvas id="loadSubscriberChartData"></canvas>
-        
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const chartData = @json($subscriptionChartData);
-                            const ctx = document.getElementById("loadSubscriberChartData").getContext("2d");
-    
-    
-                            new Chart(ctx, {
-                                type: 'bar',
-                                data: chartData,
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true
-                                        }
+            <div class="mt-5 md:mt-1 p-5 bg-gradient-to-r from-teal-500 to-indigo-600 border rounded-xl">
+                <!-- Title -->
+                <h2 class="text-3xl font-extrabold text-white mb-6">Transaction Status</h2>
+            
+                <!-- Chart Container -->
+                <div class="relative w-full h-80 rounded-lg overflow-hidden bg-white shadow-lg">
+                    <canvas id="loadTransactionChartData" class="w-full h-full"></canvas>
+                </div>
+            
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        const chartData = @json($transactionChartData);
+                        const ctx = document.getElementById("loadTransactionChartData").getContext("2d");
+            
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: chartData,
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
                                     }
                                 }
-                            })
-                        });
-                    </script>
-                </div>
+                            }
+                        })
+                    });
+                </script>
             </div>
-
-            <div class="mt-5 md:mt-1 p-3 border rounded-xl">
-                <h2 class="text-3xl font-extrabold">Transaction Status</h2>
-                <div class="">
-                    <canvas id="loadTransactionChartData"></canvas>
-    
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const chartData = @json($transactionChartData);
-                            const ctx = document.getElementById("loadTransactionChartData").getContext("2d");
-    
-    
-                            new Chart(ctx, {
-                                type: 'bar',
-                                data: chartData,
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true
-                                        }
-                                    }
-                                }
-                            })
-                        });
-                    </script>
-                </div>
-            </div>
+            
         </div>
 
         <flux:separator class="m-5" />
